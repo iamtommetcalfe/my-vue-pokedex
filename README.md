@@ -1,2 +1,24 @@
-# my-vue-pokedex
-A modern Pokédex built with Vue 3 and TypeScript, utilizing the PokéAPI to provide detailed information on Pokémon. Explore, search, and immerse yourself in the Pokémon universe.
+# My Vue Pokédex
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
