@@ -1,10 +1,10 @@
 <template>
   <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
     <div class="btn-group me-2" role="group" aria-label="First group">
-      <button id="previous-btn" type="button" class="btn btn-primary btn-sm"
-              :class="{ 'disabled': !previousUrl }"
-              :data-url="previousUrl"
-              @click="previousUrl ? $emit('navigate', previousUrl) : null"
+      <button
+          class="btn btn-primary"
+          :disabled="!canNavigatePrevious"
+          @click="$emit('navigatePage', currentPage - 1)"
       >
         Previous
       </button>
@@ -28,10 +28,10 @@
     </div>
 
     <div class="btn-group" role="group" aria-label="Third group">
-      <button id="next-btn" type="button" class="btn btn-primary btn-sm"
-              :class="{ 'disabled': !nextUrl }"
-              :data-url="nextUrl"
-              @click="nextUrl ? $emit('navigate', nextUrl) : null"
+      <button
+          class="btn btn-primary"
+          :disabled="!canNavigateNext"
+          @click="$emit('navigatePage', currentPage + 1)"
       >
         Next
       </button>
@@ -52,13 +52,13 @@ export default defineComponent({
       type: Number,
       required: true
     },
-    nextUrl: {
-      type: String as () => string | null,
-      default: null
+    canNavigatePrevious: {
+      type: Boolean,
+      required: true
     },
-    previousUrl: {
-      type: String as () => string | null,
-      default: null
+    canNavigateNext: {
+      type: Boolean,
+      required: true
     }
   },
   computed: {
@@ -75,7 +75,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-/* Add your styles here */
-</style>
