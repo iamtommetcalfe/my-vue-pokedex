@@ -13,7 +13,7 @@
         </div>
       </header>
       <router-view class="container" :searchQuery="searchQuery"></router-view>
-      <footer class="py-3 bg-body-secondary">
+      <footer class="py-3">
         <div class="container">
           <p class="text-center text-body-secondary">© {{ new Date().getFullYear() }} <a target="_blank" title="Tom Metcalfe Github" href="https://github.com/iamtommetcalfe">Tom Metcalfe</a></p>
         </div>
