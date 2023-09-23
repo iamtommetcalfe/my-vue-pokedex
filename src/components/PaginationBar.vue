@@ -1,6 +1,6 @@
 <template>
   <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-    <div class="btn-group me-2" role="group" aria-label="First group">
+    <div class="btn-group btn-group-sm me-2" role="group" aria-label="Previous Group">
       <button
           class="btn btn-primary"
           :disabled="!canNavigatePrevious"
@@ -10,14 +10,14 @@
       </button>
     </div>
 
-    <div class="btn-group me-2" role="group" aria-label="Second group">
-      <button v-if="currentPage > 2" @click="$emit('navigatePage', 1)" class="btn btn-primary btn-sm">1</button>
+    <div class="btn-group btn-group-sm me-2" role="group" aria-label="Pages Group">
+      <button v-if="currentPage > 2" @click="$emit('navigatePage', 1)" class="btn btn-primary">1</button>
       <span v-if="currentPage > 3">...</span>
 
       <button
           v-for="page in displayedPages"
           :key="page"
-          :class="['btn', 'btn-primary', 'btn-sm', {'active': page === currentPage}]"
+          :class="['btn', 'btn-primary', {'active': page === currentPage}]"
           @click="$emit('navigatePage', page)"
       >
         {{ page }}
@@ -27,7 +27,7 @@
       <button v-if="currentPage < totalPages - 1" @click="$emit('navigatePage', totalPages)" class="btn btn-primary btn-sm">{{ totalPages }}</button>
     </div>
 
-    <div class="btn-group" role="group" aria-label="Third group">
+    <div class="btn-group btn-group-sm me-2" role="group" aria-label="Next Group">
       <button
           class="btn btn-primary"
           :disabled="!canNavigateNext"
