@@ -1,20 +1,4 @@
 <template>
-<!--    <nav class="py-2 bg-body-tertiary border-bottom">-->
-<!--      <div class="container d-flex flex-wrap">-->
-<!--        <ul class="nav me-auto">-->
-<!--          <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2 active" aria-current="page">Home</a></li>-->
-<!--          <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">Features</a></li>-->
-<!--          <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">Pricing</a></li>-->
-<!--          <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">FAQs</a></li>-->
-<!--          <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">About</a></li>-->
-<!--        </ul>-->
-<!--        <ul class="nav">-->
-<!--          <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">Login</a></li>-->
-<!--          <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">Sign up</a></li>-->
-<!--        </ul>-->
-<!--      </div>-->
-<!--    </nav>-->
-
     <main>
       <header class="py-3 mb-4 border-bottom">
         <div class="container d-flex flex-wrap justify-content-center">
@@ -29,6 +13,11 @@
         </div>
       </header>
       <router-view class="container"></router-view>
+      <footer class="py-3 bg-body-secondary">
+        <div class="container">
+          <p class="text-center text-body-secondary">© {{ new Date().getFullYear() }} <a target="_blank" title="Tom Metcalfe Github" href="https://github.com/iamtommetcalfe">Tom Metcalfe</a></p>
+        </div>
+      </footer>
     </main>
 </template>
 

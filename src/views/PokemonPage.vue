@@ -1,19 +1,26 @@
 <template>
-  <div v-if="pokemonDetails">
-    <h1>{{ pokemonDetails.name }}</h1>
-    <!-- You can add more Pokémon details here. For example: -->
-    <img :src="pokemonDetails.sprites.front_default" alt="Pokemon image" v-if="pokemonDetails.sprites && pokemonDetails.sprites.front_default">
-    <p>Type: {{ pokemonDetails.types[0].type.name }}</p>
-    <!-- Add more details as desired. The above are just examples and may need modification based on the API's response structure. -->
-  </div>
-  <div v-else>
-    <p>Loading Pokémon details...</p>
+  <div>
+    <div v-if="loading">
+      <p>Loading Pokémon details...</p>
+    </div>
+
+    <div v-else-if="pokemonDetails">
+      <h1>{{ capitalize(pokemonDetails.name) }}</h1>
+      <img :src="pokemonDetails.sprites.front_default" alt="Pokemon image" v-if="pokemonDetails.sprites && pokemonDetails.sprites.front_default">
+      <p>Type: {{ pokemonDetails.types[0].type.name }}</p>
+      <!-- Add more details as desired. The above are just examples and may need modification based on the API's response structure. -->
+    </div>
+
+    <div v-else-if="errorMessage">
+      <p class="alert alert-danger">{{ errorMessage }}</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, PropType } from 'vue';
 import { getPokemonByName } from '@/api/pokemonAPI';
+import { capitalize } from '@/helpers';
 
 export default defineComponent({
   props: {
@@ -21,6 +28,8 @@ export default defineComponent({
   },
   setup(props) {
     const pokemonDetails = ref(null);
+    const loading = ref(true);
+    const errorMessage = ref<string | null>(null);
 
     onMounted(async () => {
       if (props.name) {
@@ -29,20 +38,22 @@ export default defineComponent({
           pokemonDetails.value = response;
         } catch (error) {
           console.error("Failed to fetch Pokémon details:", error);
+          errorMessage.value = "Failed to load Pokémon details. Please try again later.";
+        } finally {
+          loading.value = false;
         }
       } else {
-        console.error("Pokémon name is not provided.");
+        errorMessage.value = "Pokémon name is not provided.";
+        loading.value = false;
       }
     });
 
     return {
-      pokemonDetails
+      pokemonDetails,
+      loading,
+      errorMessage,
+      capitalize
     };
   }
 });
 </script>
-
-<!-- Optional: You can add some styles specific to this component in the <style> section. -->
-<style scoped>
-/* Your component-specific styles go here */
-</style>

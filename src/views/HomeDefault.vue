@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <h1>Welcome to My Vue Pokédex</h1>
-    <table class="table table-hover table-striped table-bordered">
+
+    <div v-if="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <table v-else class="table table-hover table-striped table-bordered">
       <thead>
       <tr>
         <th scope="col">Name</th>
@@ -9,7 +14,11 @@
       </thead>
       <tbody>
       <tr v-for="pokemon in pokemonList" :key="pokemon.name">
-        <td><a href="#" @click.prevent="openPokemonModal(pokemon.name)">{{ capitalize(pokemon.name) }}</a></td>
+        <td>
+          <a href="#" @click.prevent="openPokemonModal(pokemon.name)">
+            {{ capitalize(pokemon.name) }}
+          </a>
+        </td>
       </tr>
       </tbody>
       <tfoot>
@@ -53,15 +62,16 @@ export default defineComponent({
     capitalize
   },
   setup() {
-    const pokemonList = ref([]);
-    const showModal = ref(false);
+    const pokemonList = ref<Array<any>>([]);
+    const showModal = ref<boolean>(false);
     const selectedPokemon = ref<string | null>(null);
     const nextUrl = ref<string | null>(null);
     const previousUrl = ref<string | null>(null);
-    const currentPage = ref(1);
-    const totalPages = ref(0);
+    const currentPage = ref<number>(1);
+    const totalPages = ref<number>(0);
+    const errorMessage = ref<string | null>(null);
 
-    const itemsPerPage = 10;
+    const itemsPerPage: number = 10;
 
     const calculateTotalPages = (count: number) => {
       totalPages.value = Math.ceil(count / itemsPerPage);
@@ -78,58 +88,45 @@ export default defineComponent({
 
       } catch (error) {
         console.error("Failed to fetch Pokémon list:", error);
+        errorMessage.value = "Failed to load Pokémon. Please try again later.";
       }
     });
 
-    const openPokemonModal = (pokemonName: string) => {
-      selectedPokemon.value = pokemonName;
+    const openPokemonModal = (name: string) => {
+      selectedPokemon.value = name;
       showModal.value = true;
     };
 
-    const fetchPokemonsFromUrl = async (url: string | null) => {
-      if (url) {
-        try {
-          const pokemons = await fetchPokemonFromUrl(url);
-
-          // Extract the offset from the fetched URL and set currentPage
-          const offsetParam = new URL(url).searchParams.get("offset");
-          if (offsetParam) {
-            const offset = Number(offsetParam);
-            currentPage.value = getCurrentPageFromOffset(offset);
-          }
-
-          pokemonList.value = pokemons.results;
-          previousUrl.value = pokemons.previous;
-          nextUrl.value = pokemons.next;
-
-          calculateTotalPages(pokemons.count);
-
-        } catch (error) {
-          console.error("Failed to fetch Pokémon list:", error);
-        }
-      }
-    };
-
-    const fetchPokemonWithOffset = async (offset: number) => {
+    const fetchPokemonsFromUrl = async (url: string) => {
       try {
-        const pokemons = await fetchAllPokemon(itemsPerPage, offset);
-
+        const pokemons = await fetchPokemonFromUrl(url);
         pokemonList.value = pokemons.results;
         previousUrl.value = pokemons.previous;
         nextUrl.value = pokemons.next;
+
+        calculateTotalPages(pokemons.count);
+
       } catch (error) {
-        console.error("Failed to fetch Pokémon with offset:", error);
+        console.error("Failed to fetch Pokémon list from URL:", error);
+        errorMessage.value = "Failed to load Pokémon. Please try again later.";
       }
     };
 
-    const goToPage = (page: number) => {
-      currentPage.value = page;
-      const offset = (page - 1) * itemsPerPage; // This should give 0 for the first page, itemsPerPage for the second page, etc.
-      fetchPokemonWithOffset(offset);
-    };
+    const goToPage = async (page: number) => {
+      try {
+        const offset = (page - 1) * itemsPerPage;
+        const pokemons = await fetchAllPokemon(itemsPerPage, offset);
+        pokemonList.value = pokemons.results;
+        previousUrl.value = pokemons.previous;
+        nextUrl.value = pokemons.next;
 
-    const getCurrentPageFromOffset = (offset: number) => {
-      return Math.floor(offset / itemsPerPage) + 1;
+        calculateTotalPages(pokemons.count);
+        currentPage.value = page;
+
+      } catch (error) {
+        console.error("Failed to fetch Pokémon for the page:", error);
+        errorMessage.value = "Failed to load Pokémon. Please try again later.";
+      }
     };
 
     return {
@@ -143,12 +140,8 @@ export default defineComponent({
       currentPage,
       totalPages,
       goToPage,
-      getCurrentPageFromOffset
+      errorMessage
     };
   }
 });
 </script>
-
-<style scoped>
-/* Add your styles here */
-</style>

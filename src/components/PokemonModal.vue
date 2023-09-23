@@ -1,7 +1,7 @@
 <!-- PokemonModal.vue -->
 <template>
   <transition name="modal-fade">
-    <div class="modal-backdrop" @click="close">
+    <div class="modal-backdrop" @click="closeModal">
       <div class="modal-content" @click.stop>
         <slot></slot>
       </div>
@@ -9,18 +9,19 @@
   </transition>
 </template>
 
-<script>
-export default {
-  name: 'PokemonModel',
-  methods: {
-    close() {
-      this.$emit('close');
-    }
-  }
+<script setup>
+import { defineEmits } from 'vue';
+
+// Define the emits for the component
+const emit = defineEmits(['close']);
+
+// Function to handle modal close
+const closeModal = () => {
+  emit('close');
 }
 </script>
 
-<style>
+<style scoped>
 .modal-backdrop {
   position: fixed;
   top: 0;
