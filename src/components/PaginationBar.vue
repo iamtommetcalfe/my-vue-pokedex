@@ -1,5 +1,5 @@
 <template>
-  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-toolbar align-items-center justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
     <div class="btn-group btn-group-sm me-2" role="group" aria-label="Previous Group">
       <button
           class="btn btn-primary"
