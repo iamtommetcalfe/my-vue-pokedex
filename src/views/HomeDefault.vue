@@ -28,6 +28,8 @@
               :currentPage="currentPage"
               :totalPages="totalPages"
               @navigatePage="goToPage"
+              :canNavigatePrevious="currentPage > 1"
+              :canNavigateNext="currentPage < totalPages"
           />
         </td>
       </tr>
