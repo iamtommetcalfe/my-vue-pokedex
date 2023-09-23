@@ -8,11 +8,11 @@
           </span>
           </a>
           <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search">
-            <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            <input type="search" v-model="searchQuery" class="form-control" placeholder="Search..." aria-label="Search">
           </form>
         </div>
       </header>
-      <router-view class="container"></router-view>
+      <router-view class="container" :searchQuery="searchQuery"></router-view>
       <footer class="py-3 bg-body-secondary">
         <div class="container">
           <p class="text-center text-body-secondary">© {{ new Date().getFullYear() }} <a target="_blank" title="Tom Metcalfe Github" href="https://github.com/iamtommetcalfe">Tom Metcalfe</a></p>
@@ -28,7 +28,8 @@ export default defineComponent({
   name: 'App',
   data() {
     return {
-      pokemonLogo: require('@/assets/images/logos/pokemon-large.png')
+      pokemonLogo: require('@/assets/images/logos/pokemon-large.png'),
+      searchQuery: ''
     };
   }
 });

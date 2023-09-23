@@ -12,7 +12,7 @@ export const getPokemonByName = async (name: string) => {
     }
 };
 
-export const fetchAllPokemon = async (limit: number = 10, offset: number = 0) => {
+export const fetchAllPokemon = async (limit: number = 2000, offset: number = 0) => {
     try {
         const response = await axios.get(`${BASE_URL}/pokemon`, {
             params: {
