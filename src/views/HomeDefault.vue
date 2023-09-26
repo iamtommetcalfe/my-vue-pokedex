@@ -68,6 +68,16 @@ export default defineComponent({
     PokemonModal,
     PokemonPage
   },
+  watch: {
+    searchQuery: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.currentPage = 1;  // Reset to first page
+        }
+      }
+    }
+  },
   data() {
     return {
       allPokemon: [] as Pokemon[],
