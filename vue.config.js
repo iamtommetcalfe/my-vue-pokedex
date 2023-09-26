@@ -36,6 +36,8 @@ module.exports = defineConfig({
             // Only cache 10 images.
             expiration: {
               maxEntries: 10,
+              // Cache for a maximum of one month
+              maxAgeSeconds: 24 * 60 * 60 * 30,
             },
           },
         },
@@ -46,6 +48,10 @@ module.exports = defineConfig({
           handler: 'StaleWhileRevalidate',
           options: {
             cacheName: 'static-resources',
+            expiration: {
+              // Cache for a maximum of one month
+              maxAgeSeconds: 24 * 60 * 60 * 30,
+            },
           },
         },
       ],
