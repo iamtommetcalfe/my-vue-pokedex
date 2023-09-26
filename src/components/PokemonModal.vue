@@ -9,17 +9,16 @@
   </transition>
 </template>
 
-<script setup>
-import { defineEmits } from 'vue';
+<script setup lang="ts">
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>();
 
-// Define the emits for the component
-const emit = defineEmits(['close']);
-
-// Function to handle modal close
 const closeModal = () => {
   emit('close');
-}
+};
 </script>
+
 
 <style scoped>
 .modal-backdrop {
@@ -37,9 +36,11 @@ const closeModal = () => {
 
 .modal-content {
   background: white;
-  border-radius: 8px;
   padding: 20px;
   max-width: 500px;
   width: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>
