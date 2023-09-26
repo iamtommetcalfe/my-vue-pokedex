@@ -23,7 +23,7 @@
       </button>
 
       <span v-if="currentPage < totalPages - 2">...</span>
-      <button @click="$emit('navigatePage', totalPages)" class="btn btn-primary btn-sm">{{ totalPages }}</button>
+      <button v-if="totalPages > 1" @click="$emit('navigatePage', totalPages)" class="test btn btn-primary btn-sm">{{ totalPages }}</button>
     </div>
 
     <div class="btn-group btn-group-sm me-2" role="group" aria-label="Next Group">
