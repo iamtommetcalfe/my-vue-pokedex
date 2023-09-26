@@ -11,9 +11,8 @@
     </div>
 
     <div class="btn-group btn-group-sm me-2" role="group" aria-label="Pages Group">
-      <button v-if="currentPage > 2" @click="$emit('navigatePage', 1)" class="btn btn-primary">1</button>
+      <button @click="$emit('navigatePage', 1)" :class="['btn', 'btn-primary', {'active': currentPage === 1}]">1</button>
       <span v-if="currentPage > 3">...</span>
-
       <button
           v-for="page in displayedPages"
           :key="page"
@@ -24,7 +23,7 @@
       </button>
 
       <span v-if="currentPage < totalPages - 2">...</span>
-      <button v-if="currentPage < totalPages - 1" @click="$emit('navigatePage', totalPages)" class="btn btn-primary btn-sm">{{ totalPages }}</button>
+      <button @click="$emit('navigatePage', totalPages)" class="btn btn-primary btn-sm">{{ totalPages }}</button>
     </div>
 
     <div class="btn-group btn-group-sm me-2" role="group" aria-label="Next Group">
@@ -66,7 +65,8 @@ export default defineComponent({
       const pages = [];
       for (const offset of [-2, -1, 0, 1, 2]) {
         const page = this.currentPage + offset;
-        if (page > 0 && page <= this.totalPages) {
+
+        if (page > 1 && page < this.totalPages) {
           pages.push(page);
         }
       }
