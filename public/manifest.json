@@ -2,7 +2,7 @@
   "name": "My Vue Pokédex",
   "short_name": "VuePokédex",
   "description": "A modern Pokédex built with Vue 3 and TypeScript, utilizing the PokéAPI to provide detailed information on Pokémon. Explore, search, and immerse yourself in the Pokémon universe.",
-  "start_url": "/",
+  "start_url": "/my-vue-pokedex",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2a75bb",
