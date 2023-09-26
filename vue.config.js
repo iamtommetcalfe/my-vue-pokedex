@@ -1,16 +1,21 @@
 const { defineConfig } = require('@vue/cli-service');
 
+const basePath = process.env.NODE_ENV === 'production'
+    ? '/my-vue-pokedex/'
+    : '/';
+
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: process.env.NODE_ENV === 'production'
-      ? '/my-vue-pokedex/'
-      : '/',
+  publicPath: basePath,
   pwa: {
     name: 'My Vue Pokedex',
     themeColor: '#2a75bb',
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black',
+    manifestOptions: {
+      start_url: basePath
+    },
 
     // Workbox options
     workboxPluginMode: 'GenerateSW', // or 'InjectManifest'
