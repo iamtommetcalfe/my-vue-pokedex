@@ -35,7 +35,7 @@
     "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
     "vue-loader": "^17.3.0",
-    "vue-template-compiler": "^2.7.14"
+    "vue-template-compiler": "^2.7.15"
   },
   "eslintConfig": {
     "root": true,
