@@ -36,7 +36,7 @@
       </tfoot>
     </table>
 
-    <PokemonModal v-if="showModal" @close="showModal = false">
+    <PokemonModal :isVisible="showModal" @close="showModal = false">
       <PokemonPage :name="selectedPokemon" />
     </PokemonModal>
   </div>

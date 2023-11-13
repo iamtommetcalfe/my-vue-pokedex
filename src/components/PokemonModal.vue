@@ -1,7 +1,6 @@
-<!-- PokemonModal.vue -->
 <template>
   <transition name="modal-fade">
-    <div class="modal-backdrop" @click="closeModal">
+    <div class="modal-backdrop" v-if="isVisible" @click="closeModal">
       <div class="modal-content" @click.stop>
         <slot></slot>
       </div>
@@ -10,15 +9,17 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits<{
-  (e: 'close'): void;
-}>();
+// Define the prop
+const props = defineProps({
+  isVisible: Boolean
+});
+
+const emit = defineEmits(['close']);
 
 const closeModal = () => {
   emit('close');
 };
 </script>
-
 
 <style scoped>
 .modal-backdrop {
