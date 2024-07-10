@@ -21,14 +21,19 @@ jobs:
           ISSUE_TITLE="${{ github.event.issue.title }}"
           ISSUE_BODY="${{ github.event.issue.body }}"
           RESPONSE=$(curl -s -X POST "https://api.app.shortcut.com/api/v3/stories" \
-          -H "Content-Type: application/json" \
-          -H "Shortcut-Token: $SHORTCUT_API_TOKEN" \
-          -d "{
-            \"name\": \"$ISSUE_TITLE\",
-            \"description\": \"$ISSUE_BODY\",
-            \"project_id\": <YOUR_PROJECT_ID>
-          }")
+            -H "Content-Type: application/json" \
+            -H "Shortcut-Token: $SHORTCUT_API_TOKEN" \
+            -d "{
+              \"name\": \"$ISSUE_TITLE\",
+              \"description\": \"$ISSUE_BODY\",
+              \"workflow_state_id\": ${{ secrets.SHORTCUT_WORKFLOW_STATE_ID }}
+            }")
+          echo "Response: $RESPONSE"
           STORY_ID=$(echo $RESPONSE | jq -r '.id')
+          if [[ -z "$STORY_ID" || "$STORY_ID" == "null" ]]; then
+            echo "Failed to extract story ID."
+            exit 1
+          fi
           echo "STORY_ID=SC-$STORY_ID" >> $GITHUB_ENV
 
       - name: Comment on GitHub issue
