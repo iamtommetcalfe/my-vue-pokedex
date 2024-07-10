@@ -27,4 +27,19 @@ jobs:
             \"name\": \"$ISSUE_TITLE\",
             \"description\": \"$ISSUE_BODY\",
             \"workflow_state_id\": $SHORTCUT_WORKFLOW_STATE_ID
-          }"
+            }")
+          STORY_ID=$(echo $RESPONSE | jq -r '.id')
+          echo "STORY_ID=SC-$STORY_ID" >> $GITHUB_ENV
+
+      - name: Comment on GitHub issue
+        if: success() && env.STORY_ID != 'null'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          STORY_ID=${{ env.STORY_ID }}
+          COMMENT_BODY="Shortcut story created: [Story ID: $STORY_ID](https://app.shortcut.com/your-workspace/story/${{ steps.create_shortcut_ticket.outputs.STORY_ID }})"
+          curl -X POST "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/comments" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"body\": \"$COMMENT_BODY\"}"
