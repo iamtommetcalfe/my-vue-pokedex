@@ -20,14 +20,14 @@ jobs:
         run: |
           ISSUE_TITLE="${{ github.event.issue.title }}"
           ISSUE_BODY="${{ github.event.issue.body }}"
-          curl -X POST "https://api.app.shortcut.com/api/v3/stories" \
+          RESPONSE=$(curl -s -X POST "https://api.app.shortcut.com/api/v3/stories" \
           -H "Content-Type: application/json" \
           -H "Shortcut-Token: $SHORTCUT_API_TOKEN" \
           -d "{
             \"name\": \"$ISSUE_TITLE\",
             \"description\": \"$ISSUE_BODY\",
-            \"workflow_state_id\": $SHORTCUT_WORKFLOW_STATE_ID
-            }")
+            \"project_id\": <YOUR_PROJECT_ID>
+          }")
           STORY_ID=$(echo $RESPONSE | jq -r '.id')
           echo "STORY_ID=SC-$STORY_ID" >> $GITHUB_ENV
 
