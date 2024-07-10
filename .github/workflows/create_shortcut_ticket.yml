@@ -34,7 +34,7 @@ jobs:
             echo "Failed to extract story ID."
             exit 1
           fi
-          echo "STORY_ID=SC-$STORY_ID" >> $GITHUB_ENV
+          echo "STORY_ID=$STORY_ID" >> $GITHUB_ENV
 
       - name: Comment on GitHub issue
         if: success() && env.STORY_ID != 'null'
@@ -43,7 +43,7 @@ jobs:
         run: |
           ISSUE_NUMBER=${{ github.event.issue.number }}
           STORY_ID=${{ env.STORY_ID }}
-          COMMENT_BODY="Shortcut story created: [Story ID: $STORY_ID](https://app.shortcut.com/flynn-industries/story/$STORY_ID)"
+          COMMENT_BODY="Shortcut story created: [ID: $STORY_ID](https://app.shortcut.com/flynn-industries/story/$STORY_ID)"
           curl -L -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
