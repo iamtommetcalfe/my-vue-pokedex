@@ -12,6 +12,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check for specific label
+        id: check_label
+        run: |
+          LABELS=$(echo "${{ github.event.issue.labels[*] }}" | jq -r '.[].name')
+          echo "Labels: $LABELS"
+          if [[ "$LABELS" != *"bug"* ]]; then
+            echo "Label not found. Exiting."
+            exit 0
+          fi
+
       - name: Create Shortcut ticket
         env:
           SHORTCUT_API_TOKEN: ${{ secrets.SHORTCUT_API_TOKEN }}
