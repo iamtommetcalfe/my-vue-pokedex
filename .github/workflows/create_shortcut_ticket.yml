@@ -15,7 +15,7 @@ jobs:
       - name: Extract labels
         id: extract_labels
         run: |
-          echo github.event.issue.labels
+          echo ${{ github.event.issue.labels }}
           LABELS=$(echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[].name')
           echo "LABELS=$LABELS" >> $GITHUB_ENV
 
