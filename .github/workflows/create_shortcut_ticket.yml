@@ -15,7 +15,7 @@ jobs:
       - name: Check for specific label
         id: check_label
         run: |
-          LABELS=$(jq -r '.issue.labels[].name' <<< "${{ toJson(github.event) }}")
+          LABELS=$(jq -r '.issue.labels[].name' <<< '${{ toJson(github.event) }}')
           echo "Labels: $LABELS"
           if [[ "$LABELS" != *"bug"* ]]; then
             echo "Label not found. Exiting."
