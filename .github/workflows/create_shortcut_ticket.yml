@@ -12,13 +12,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Extract labels
+        id: extract_labels
+        run: echo "LABELS=$(jq -r '.issue.labels[].name' <<< '${{ toJson(github.event) }}')" >> $GITHUB_ENV
+
       - name: Check for specific label
-        id: check_label
         run: |
-          LABELS=$(jq -r '.issue.labels[].name' <<< '${{ toJson(github.event) }}')
           echo "Labels: $LABELS"
           if [[ "$LABELS" != *"bug"* ]]; then
-            echo "Label not found. Exiting."
+            echo "Label 'bug' not found. Exiting."
             exit 0
           fi
 
