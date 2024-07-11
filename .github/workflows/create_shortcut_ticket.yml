@@ -19,7 +19,7 @@ jobs:
           for label in "${{ github.event.issue.labels }}"; do
             echo "Label: $label.name"
           
-            if $label.name != "bug" then
+            if [[ $label.name != "bug" ]]; then
               echo "Label 'bug' not found. Exiting."
               exit 0
             fi
