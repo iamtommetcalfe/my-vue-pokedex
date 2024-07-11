@@ -14,7 +14,8 @@ jobs:
 
       - name: Extract labels
         id: extract_labels
-        run: echo "LABELS=$(jq -r '.issue.labels[].name' <<< '${{ toJson(github.event) }}')" >> $GITHUB_ENV
+        run: |
+          echo "LABELS=$(echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[].name')" >> $GITHUB_ENV
 
       - name: Check for specific label
         run: |
