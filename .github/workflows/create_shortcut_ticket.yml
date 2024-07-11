@@ -12,20 +12,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract labels
-        id: extract_labels
-        run: |
-          echo ${{ github.event.issue.labels }}
-          LABELS=$(echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[].name')
-          echo "LABELS=$LABELS" >> $GITHUB_ENV
 
-      - name: Check for specific label
+      - name: Extract and print labels
         run: |
-          echo "Labels: $LABELS"
-          if [[ "$LABELS" != *"bug"* ]]; then
-            echo "Label 'bug' not found. Exiting."
-            exit 0
-          fi
+          echo "Extracting labels..."
+          for label in "${{ github.event.issue.labels }}"; do
+            echo "Label: $label.name"
+          
+            if $label.name != "bug" then
+              echo "Label 'bug' not found. Exiting."
+              exit 0
+            fi
+          done
 
       - name: Create Shortcut ticket
         env:
