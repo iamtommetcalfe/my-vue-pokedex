@@ -7,23 +7,11 @@ on:
 jobs:
   create-shortcut-ticket:
     runs-on: ubuntu-latest
+    if: contains( github.event.issue.labels.*.name, 'bug')
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-
-      - name: Extract and print labels
-        run: |
-          echo "Extracting labels..."
-          for label in "${{ github.event.issue.labels }}"; do
-            echo "Label: $label.name"
-          
-            if [[ $label.name != "bug" ]]; then
-              echo "Label 'bug' not found. Exiting."
-              exit 0
-            fi
-          done
 
       - name: Create Shortcut ticket
         env:
