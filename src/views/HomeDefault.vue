@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Welcome to My Vue Pokédex</h1>
+    <h1>Welcome to My Pokédex</h1>
 
     <div v-if="errorMessage" class="alert alert-danger">
       {{ errorMessage }}
