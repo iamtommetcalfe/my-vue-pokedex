@@ -79,14 +79,14 @@ export default defineComponent({
     const allPokemon = ref<Pokemon[]>([]);
     const currentPage = ref(parseInt(route.query.page as string) || 1);
     const itemsPerPage = ref(10);
+    const searchQuery = ref(
+      route.query.search ? route.query.search.toString().toLowerCase() : "",
+    );
 
     const filteredPokemon = computed(() => {
-      if (!route.query.search) return allPokemon.value;
-      const searchQuery = route.query.search
-        ? route.query.search.toString().toLowerCase()
-        : "";
+      if (!searchQuery.value) return allPokemon.value;
       return allPokemon.value.filter((pokemon) =>
-        pokemon.name.includes(searchQuery),
+        pokemon.name.toLowerCase().includes(searchQuery.value),
       );
     });
 
@@ -136,6 +136,7 @@ export default defineComponent({
           page: currentPage.value.toString(),
           modal: showModal.value.toString(),
           pokemon: selectedPokemon.value,
+          search: searchQuery.value,
         },
       });
     };
@@ -144,6 +145,9 @@ export default defineComponent({
       currentPage.value = parseInt(route.query.page as string) || 1;
       showModal.value = route.query.modal === "true";
       selectedPokemon.value = route.query.pokemon as string | null;
+      searchQuery.value = route.query.search
+        ? route.query.search.toString().toLowerCase()
+        : "";
     });
 
     const fetchPokemonList = async () => {
@@ -165,6 +169,7 @@ export default defineComponent({
       allPokemon,
       currentPage,
       itemsPerPage,
+      searchQuery,
       filteredPokemon,
       paginatedPokemon,
       totalPages,

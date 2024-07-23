@@ -16,7 +16,11 @@
             />
           </span>
         </router-link>
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search">
+        <form
+          class="col-12 col-lg-auto mb-3 mb-lg-0"
+          role="search"
+          @submit.prevent="updateSearch"
+        >
           <input
             type="search"
             v-model="searchQuery"
@@ -27,7 +31,7 @@
         </form>
       </div>
     </header>
-    <router-view class="container" :searchQuery="searchQuery"></router-view>
+    <router-view class="container" :key="$route.fullPath"></router-view>
     <footer class="py-3">
       <div class="container">
         <p class="text-center text-body-secondary">
@@ -45,21 +49,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
   name: "App",
-  data() {
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+    const searchQuery = ref(route.query.search || "");
+
+    watch(searchQuery, (newQuery) => {
+      router.push({ path: "/", query: { ...route.query, search: newQuery } });
+    });
+
+    const updateSearch = () => {
+      router.push({
+        path: "/",
+        query: { ...route.query, search: searchQuery.value },
+      });
+    };
+
     return {
       pokemonLogo: require("@/assets/images/logos/pokemon-large.png"),
-      searchQuery: "",
+      searchQuery,
+      updateSearch,
     };
   },
 });
 </script>
 
 <style scoped>
-/* Add global styles if needed. Using scoped will make sure the styles only apply to this component. */
 header {
   background-color: #f2f2f2;
   padding: 1em 0;
