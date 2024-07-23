@@ -9,18 +9,29 @@
         <h1>{{ capitalize(pokemonDetails.name) }}</h1>
       </div>
       <div class="pokemon-card-image">
-        <img :src="pokemonDetails.sprites.front_default" alt="Pokemon image" v-if="pokemonDetails.sprites && pokemonDetails.sprites.front_default">
+        <img
+          :src="pokemonDetails.sprites.front_default"
+          alt="Pokemon image"
+          v-if="pokemonDetails.sprites && pokemonDetails.sprites.front_default"
+        />
       </div>
       <div class="pokemon-card-details">
-        <p v-if="pokemonDetails.types && pokemonDetails.types.length > 0"><b>Type: </b>
+        <p v-if="pokemonDetails.types && pokemonDetails.types.length > 0">
+          <b>Type: </b>
           <span v-for="(typeObj, index) in pokemonDetails.types" :key="index">
-          {{ capitalize(typeObj.type.name) }}<span v-if="index < pokemonDetails.types.length - 1">, </span>
-      </span>
+            {{ capitalize(typeObj.type.name)
+            }}<span v-if="index < pokemonDetails.types.length - 1">, </span>
+          </span>
         </p>
-        <p v-if="pokemonDetails.stats && pokemonDetails.stats.length > 0"><b>Stats: </b>
+        <p v-if="pokemonDetails.stats && pokemonDetails.stats.length > 0">
+          <b>Stats: </b>
           <span v-for="(statObj, index) in pokemonDetails.stats" :key="index">
-        {{ capitalize(statObj.stat.name) }} (Base: {{ statObj.base_stat }}, Effort: {{ statObj.effort }})<span v-if="index < pokemonDetails.stats.length - 1">, </span>
-      </span>
+            {{ capitalize(statObj.stat.name) }} (Base: {{ statObj.base_stat }},
+            Effort: {{ statObj.effort }})<span
+              v-if="index < pokemonDetails.stats.length - 1"
+              >,
+            </span>
+          </span>
         </p>
       </div>
     </div>
@@ -32,14 +43,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, PropType } from 'vue';
-import { getPokemonByName } from '@/api/pokemonAPI';
-import { capitalize } from '@/helpers';
+import { defineComponent, ref, onMounted, PropType } from "vue";
+import { getPokemonByName } from "@/api/pokemonAPI";
+import { capitalize } from "@/helpers";
 
 interface PokemonDetails {
   name: string;
   types: Array<{ type: { name: string } }>;
-  stats: Array<{ stat: { name: string }, base_stat: number, effort: number }>;
+  stats: Array<{ stat: { name: string }; base_stat: number; effort: number }>;
   sprites: { front_default: string };
 }
 
@@ -58,7 +69,8 @@ export default defineComponent({
           pokemonDetails.value = await getPokemonByName(props.name);
         } catch (error) {
           console.error("Failed to fetch Pokémon details:", error);
-          errorMessage.value = "Failed to load Pokémon details. Please try again later.";
+          errorMessage.value =
+            "Failed to load Pokémon details. Please try again later.";
         } finally {
           loading.value = false;
         }
@@ -72,9 +84,9 @@ export default defineComponent({
       pokemonDetails,
       loading,
       errorMessage,
-      capitalize
+      capitalize,
     };
-  }
+  },
 });
 </script>
 

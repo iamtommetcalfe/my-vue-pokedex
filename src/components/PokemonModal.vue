@@ -10,14 +10,14 @@
 
 <script setup lang="ts">
 // Define the prop
-const props = defineProps({
-  isVisible: Boolean
-});
+const { isVisible } = defineProps<{
+  isVisible: boolean;
+}>();
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(["close"]);
 
 const closeModal = () => {
-  emit('close');
+  emit("close");
 };
 </script>
 
