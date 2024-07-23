@@ -36,7 +36,11 @@
       </tfoot>
     </table>
 
-    <PokemonModal :isVisible="showModal" @close="showModal = false">
+    <PokemonModal
+      :isVisible="showModal"
+      @close="showModal = false"
+      @navigate="navigatePokemon"
+    >
       <PokemonPage :name="selectedPokemon" />
     </PokemonModal>
   </div>
@@ -109,6 +113,19 @@ export default defineComponent({
     },
     goToPage(page: number) {
       this.currentPage = page;
+    },
+    navigatePokemon(direction: number) {
+      const currentIndex = this.filteredPokemon.findIndex(
+        (pokemon) => pokemon.name === this.selectedPokemon,
+      );
+      console.log("Current Index:", currentIndex);
+      if (currentIndex !== -1) {
+        const newIndex =
+          (currentIndex + direction + this.filteredPokemon.length) %
+          this.filteredPokemon.length;
+        console.log("New Index:", newIndex);
+        this.selectedPokemon = this.filteredPokemon[newIndex].name;
+      }
     },
   },
   async created() {

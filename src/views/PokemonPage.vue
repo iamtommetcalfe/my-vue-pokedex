@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, PropType } from "vue";
+import { defineComponent, ref, watch, PropType } from "vue";
 import { getPokemonByName } from "@/api/pokemonAPI";
 import { capitalize } from "@/helpers";
 
@@ -56,29 +56,39 @@ interface PokemonDetails {
 
 export default defineComponent({
   props: {
-    name: String as PropType<string>,
+    name: {
+      type: String as PropType<string>,
+      required: true,
+    },
   },
   setup(props) {
     const pokemonDetails = ref<PokemonDetails | null>(null);
     const loading = ref(true);
     const errorMessage = ref<string | null>(null);
 
-    onMounted(async () => {
-      if (props.name) {
-        try {
-          pokemonDetails.value = await getPokemonByName(props.name);
-        } catch (error) {
-          console.error("Failed to fetch Pokémon details:", error);
-          errorMessage.value =
-            "Failed to load Pokémon details. Please try again later.";
-        } finally {
-          loading.value = false;
-        }
-      } else {
-        errorMessage.value = "Pokémon name is not provided.";
+    const fetchPokemonDetails = async (name: string) => {
+      loading.value = true;
+      errorMessage.value = null;
+      try {
+        pokemonDetails.value = await getPokemonByName(name);
+      } catch (error) {
+        console.error("Failed to fetch Pokémon details:", error);
+        errorMessage.value =
+          "Failed to load Pokémon details. Please try again later.";
+      } finally {
         loading.value = false;
       }
-    });
+    };
+
+    watch(
+      () => props.name,
+      (newName) => {
+        if (newName) {
+          fetchPokemonDetails(newName);
+        }
+      },
+      { immediate: true },
+    );
 
     return {
       pokemonDetails,
