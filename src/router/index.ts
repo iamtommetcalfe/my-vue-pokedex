@@ -7,6 +7,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "Home",
     component: HomeDefault,
+    props: (route) => ({
+      page: parseInt(route.query.page as string) || 1,
+      modal: route.query.modal === "true",
+      pokemon: route.query.pokemon || null,
+    }),
   },
   {
     path: "/pokemon/:name",

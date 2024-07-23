@@ -38,7 +38,7 @@
 
     <PokemonModal
       :isVisible="showModal"
-      @close="showModal = false"
+      @close="closePokemonModal"
       @navigate="navigatePokemon"
     >
       <PokemonPage :name="selectedPokemon" />
@@ -47,7 +47,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { fetchAllPokemon } from "@/api/pokemonAPI";
 import PokemonModal from "@/components/PokemonModal.vue";
 import PokemonPage from "@/views/PokemonPage.vue";
@@ -61,91 +62,117 @@ interface Pokemon {
 
 export default defineComponent({
   name: "HomeDefault",
-  props: {
-    searchQuery: {
-      type: String,
-      default: "",
-    },
-  },
   components: {
     PaginationBar,
     PokemonModal,
     PokemonPage,
   },
-  watch: {
-    searchQuery: {
-      immediate: true,
-      handler(newVal, oldVal) {
-        if (newVal !== oldVal) {
-          this.currentPage = 1; // Reset to first page
-        }
-      },
-    },
-  },
-  data() {
-    return {
-      allPokemon: [] as Pokemon[],
-      currentPage: 1,
-      itemsPerPage: 10,
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+
+    const showModal = ref(route.query.modal === "true");
+    const selectedPokemon = ref<string | null>(
+      route.query.pokemon as string | null,
+    );
+    const errorMessage = ref<string | null>(null);
+    const allPokemon = ref<Pokemon[]>([]);
+    const currentPage = ref(parseInt(route.query.page as string) || 1);
+    const itemsPerPage = ref(10);
+
+    const filteredPokemon = computed(() => {
+      if (!route.query.search) return allPokemon.value;
+      const searchQuery = route.query.search
+        ? route.query.search.toString().toLowerCase()
+        : "";
+      return allPokemon.value.filter((pokemon) =>
+        pokemon.name.includes(searchQuery),
+      );
+    });
+
+    const paginatedPokemon = computed(() => {
+      const start = (currentPage.value - 1) * itemsPerPage.value;
+      const end = start + itemsPerPage.value;
+      return filteredPokemon.value.slice(start, end);
+    });
+
+    const totalPages = computed(() => {
+      return Math.ceil(filteredPokemon.value.length / itemsPerPage.value);
+    });
+
+    const openPokemonModal = (name: string) => {
+      selectedPokemon.value = name;
+      showModal.value = true;
+      updateRoute();
     };
-  },
-  computed: {
-    filteredPokemon() {
-      if (!this.searchQuery) return this.allPokemon;
-      return this.allPokemon.filter((pokemon) =>
-        pokemon.name.includes(this.searchQuery.toLowerCase()),
+
+    const closePokemonModal = () => {
+      showModal.value = false;
+      updateRoute();
+    };
+
+    const goToPage = (page: number) => {
+      currentPage.value = page;
+      updateRoute();
+    };
+
+    const navigatePokemon = (direction: number) => {
+      const currentIndex = filteredPokemon.value.findIndex(
+        (pokemon) => pokemon.name === selectedPokemon.value,
       );
-    },
-    paginatedPokemon() {
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      return this.filteredPokemon.slice(start, end);
-    },
-    totalPages() {
-      return Math.ceil(this.filteredPokemon.length / this.itemsPerPage);
-    },
-  },
-  methods: {
-    capitalize,
-    openPokemonModal(name: string) {
-      this.selectedPokemon = name;
-      this.showModal = true;
-    },
-    goToPage(page: number) {
-      this.currentPage = page;
-    },
-    navigatePokemon(direction: number) {
-      const currentIndex = this.filteredPokemon.findIndex(
-        (pokemon) => pokemon.name === this.selectedPokemon,
-      );
-      console.log("Current Index:", currentIndex);
       if (currentIndex !== -1) {
         const newIndex =
-          (currentIndex + direction + this.filteredPokemon.length) %
-          this.filteredPokemon.length;
-        console.log("New Index:", newIndex);
-        this.selectedPokemon = this.filteredPokemon[newIndex].name;
+          (currentIndex + direction + filteredPokemon.value.length) %
+          filteredPokemon.value.length;
+        selectedPokemon.value = filteredPokemon.value[newIndex].name;
+        updateRoute();
       }
-    },
-  },
-  async created() {
-    try {
-      const response = await fetchAllPokemon();
-      this.allPokemon = response.results;
-    } catch (error) {
-      console.error("Failed to fetch Pokémon list:", error);
-      this.errorMessage = "Failed to load Pokémon. Please try again later.";
-    }
-  },
-  setup() {
-    const showModal = ref(false);
-    const selectedPokemon = ref<string | null>(null);
-    const errorMessage = ref<string | null>(null);
+    };
+
+    const updateRoute = () => {
+      router.push({
+        path: "/",
+        query: {
+          page: currentPage.value.toString(),
+          modal: showModal.value.toString(),
+          pokemon: selectedPokemon.value,
+        },
+      });
+    };
+
+    watch(route, () => {
+      currentPage.value = parseInt(route.query.page as string) || 1;
+      showModal.value = route.query.modal === "true";
+      selectedPokemon.value = route.query.pokemon as string | null;
+    });
+
+    const fetchPokemonList = async () => {
+      try {
+        const response = await fetchAllPokemon();
+        allPokemon.value = response.results;
+      } catch (error) {
+        console.error("Failed to fetch Pokémon list:", error);
+        errorMessage.value = "Failed to load Pokémon. Please try again later.";
+      }
+    };
+
+    fetchPokemonList();
 
     return {
       showModal,
       selectedPokemon,
       errorMessage,
+      allPokemon,
+      currentPage,
+      itemsPerPage,
+      filteredPokemon,
+      paginatedPokemon,
+      totalPages,
+      capitalize,
+      openPokemonModal,
+      closePokemonModal,
+      goToPage,
+      navigatePokemon,
     };
   },
 });
