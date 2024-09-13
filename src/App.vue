@@ -51,6 +51,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import pokemonLogo from "@/assets/images/logos/pokemon-large.png";
 
 export default defineComponent({
   name: "App",
@@ -71,7 +72,7 @@ export default defineComponent({
     };
 
     return {
-      pokemonLogo: require("@/assets/images/logos/pokemon-large.png"),
+      pokemonLogo,
       searchQuery,
       updateSearch,
     };
