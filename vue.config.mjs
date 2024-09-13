@@ -1,6 +1,6 @@
-const { defineConfig } = require("@vue/cli-service");
+import { defineConfig } from "@vue/cli-service";
 
-module.exports = defineConfig({
+export default defineConfig({
   transpileDependencies: true,
   pwa: {
     name: "My Vue Pokédex",
@@ -67,45 +67,29 @@ module.exports = defineConfig({
         },
       ],
     },
-
-    // Workbox options
-    workboxPluginMode: "GenerateSW", // or 'InjectManifest'
+    workboxPluginMode: "GenerateSW",
     workboxOptions: {
-      // these options encourage the Service Workers to get in there fast
-      // and not allow any straggling "old" SWs to hang around
       clientsClaim: true,
       skipWaiting: true,
 
-      // define runtime caching rules.
       runtimeCaching: [
         {
-          // Match any request that ends with .png, .jpg, .jpeg or .svg.
           urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
-
-          // Apply a cache-first strategy.
           handler: "CacheFirst",
-
           options: {
-            // Use a custom cache name.
             cacheName: "images",
-
-            // Only cache 10 images.
             expiration: {
               maxEntries: 10,
-              // Cache for a maximum of one month
               maxAgeSeconds: 24 * 60 * 60 * 30,
             },
           },
         },
         {
-          // Match CSS and JS assets
           urlPattern: /\.(?:css|js)$/,
-          // Use the 'StaleWhileRevalidate' strategy.
           handler: "StaleWhileRevalidate",
           options: {
             cacheName: "static-resources",
             expiration: {
-              // Cache for a maximum of one month
               maxAgeSeconds: 24 * 60 * 60 * 30,
             },
           },
